@@ -51,4 +51,13 @@ def get_item_db():
     if items == None:
         print('something went wrong: items == None')
     else:
-        return items
+        items_formatted = []
+        for item in items:
+            item_dict = {
+                "name": item[0],
+                "description": item[1],
+                "quantity": item[2],
+                "created_at": item[3]
+            }
+            items_formatted.append(item_dict)
+        return items_formatted
