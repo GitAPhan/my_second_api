@@ -1,5 +1,6 @@
 import mariadb as db
 import dbcreds as c
+import traceback as t
 
 # connect to database function
 def connect_db():
@@ -32,3 +33,22 @@ def disconnect_db(conn, cursor):
     except Exception as e:
         print(e)
         print("connection close error")
+
+# return all item names, description, quantity, created_at
+def get_item_db():
+    items = None
+
+    conn, cursor = connect_db()
+
+    try:
+        cursor.execute("select name, description, quantity, created_at from item")
+        items = cursor.fetchall()
+    except Exception as e:
+        print('##########',e,'##########')
+    
+    disconnect_db(conn, cursor)
+    
+    if items == None:
+        print('something went wrong: items == None')
+    else:
+        return items
