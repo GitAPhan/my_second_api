@@ -1,6 +1,5 @@
 import mariadb as db
 import dbcreds as c
-import traceback as t
 
 # connect to database function
 def connect_db():
@@ -51,6 +50,7 @@ def get_item_db():
     if items == None:
         print('something went wrong: items == None')
     else:
+        # assign key name to returned values
         items_formatted = []
         for item in items:
             item_dict = {
@@ -61,3 +61,25 @@ def get_item_db():
             }
             items_formatted.append(item_dict)
         return items_formatted
+
+# Given a name, description and quantity insert a new item into the DB
+def post_item_db(name, description, quantity):
+    conn, cursor = connect_db()
+
+    try:
+        cursor.execute("insert into item (name, description, quantity) values (?,?,?)", [name, description, quantity])
+        conn.commit()
+    except KeyError:
+        print('keyerror')
+    except db.DataError:
+        print('quantity can not be negative')
+    except db.IntegrityError:
+        print('duplicate name entry')
+    except db.Warning: 
+        print('warning')
+    # except Exception as e:
+    #     print(e)
+    
+    disconnect_db(conn, cursor)
+
+post_item_db('','same old description','4.7')
