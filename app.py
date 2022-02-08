@@ -1,3 +1,4 @@
+from email.policy import default
 from flask import Flask, request, Response
 import json
 import dbinteractions as db
@@ -7,7 +8,34 @@ app = Flask(__name__)
 # return all item names, descriptions, quantity and created_at
 @app.get('/item')
 def get_item():
-    items = db.get_item_db()
+    try:
+        # option user input for item limit
+        item_limit = int(request.args['item_limit'])
+        # conditional to raise ValueError if user input is less than 1
+        if item_limit < 1:
+            raise ValueError
+    except KeyError:
+        # if key is not present or mispelled, value for item_limit will default to None
+        item_limit = None
+    except ValueError:
+        return Response("Input Error: Please enter valid value for item_limit")
+
+    try:
+        # optional user input to order by quantity
+        ordered_list = request.args['ordered_list'].lower()
+        # if user input meets conditions then ordered_list is True
+        if ordered_list == 'true' or ordered_list == '1':
+            ordered_list = True
+        # if user input meets conditions then ordered_list is False
+        elif ordered_list == 'false' or ordered_list == '0':
+            ordered_list = False
+        # if user input does meet any of the above conditions, then error message is returned
+        else:
+            return Response("Input Error: key 'ordered_list' only accepts True of False values")
+    except KeyError:
+        ordered_list = False
+
+    items = db.get_item_db(item_limit, ordered_list)
     try:
         #convert list to json
         items_json = json.dumps(items, default=str)

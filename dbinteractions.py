@@ -39,13 +39,22 @@ def disconnect_db(conn, cursor):
         print("conn close error: General DB connection close error")
 
 # return all item names, description, quantity, created_at
-def get_item_db():
+def get_item_db(item_limit, ordered_list):
     items = None
+    print(ordered_list, item_limit)
 
     conn, cursor = connect_db()
 
     try:
-        cursor.execute("select name, description, quantity, created_at from item")
+        # conditional to determine which query to use
+        if item_limit != None and ordered_list == True:
+            cursor.execute("select name, description, quantity, created_at from item order by quantity desc limit ?", [item_limit])
+        elif item_limit != None and ordered_list == False:
+            cursor.execute("select name, description, quantity, created_at from item limit ?", [item_limit])
+        elif item_limit == None and ordered_list == True:
+            cursor.execute("select name, description, quantity, created_at from item order by quantity desc")
+        else:
+            cursor.execute("select name, description, quantity, created_at from item")
         items = cursor.fetchall()
     except Exception:
         return "General Database Error"
