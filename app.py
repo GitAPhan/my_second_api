@@ -18,12 +18,29 @@ def get_item():
 # Given a name, description and quantity insert a new item into the DB
 @app.post('/item')
 def post_item():
-    # user input
-    name = request.json['name']
-    description = request.json['description']
-    quantity = request.json['quantity']
+    # status message for key name error
+    key_status_message = "KeyError: 'name'"
+
+    try:
+        # user input
+        name = request.json['name']
+        key_status_message = "KeyError: 'description'"
+        description = request.json['description']
+        key_status_message = "KeyError: 'quantity'"
+        quantity = int(request.json['quantity'])
+
+
+    except KeyError:
+        return Response(key_status_message, mimetype='application/json', status=400)
+    except ValueError:
+        return Response('Input Error: "value for quantity has to be a positive whole number"', mimetype='application/json', status=400)
 
     # request from database
-    post_status = db.post_item_db(name, description, quantity)
+    post_status, post_code = db.post_item_db(name, description, quantity)
+
+    return Response(post_status, mimetype="application/json", status=post_code)
+
+
+
 
 app.run(debug=True)

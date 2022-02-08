@@ -1,3 +1,4 @@
+from ast import Return
 import mariadb as db
 import dbcreds as c
 
@@ -66,20 +67,35 @@ def get_item_db():
 def post_item_db(name, description, quantity):
     conn, cursor = connect_db()
 
+    # error message and status
+    status_message = "Error Message"
+    status_code = 400
+
     try:
         cursor.execute("insert into item (name, description, quantity) values (?,?,?)", [name, description, quantity])
         conn.commit()
-    except KeyError:
-        print('keyerror')
+
+        #successs message and status
+        status_message = "Success Message"
+        status_code = 200
     except db.DataError:
-        print('quantity can not be negative')
+        status_message = 'Input Error: quantity can not be negative'
     except db.IntegrityError:
-        print('duplicate name entry')
+        status_message = 'Input Error: duplicate name entry'
     except db.Warning: 
-        print('warning')
-    # except Exception as e:
-    #     print(e)
+        status_message = 'general database warning'
+    return status_message,status_code
     
     disconnect_db(conn, cursor)
 
-post_item_db('','same old description','4.7')
+# # Given an id and quantity, update an existing item in the DB to have a new quantity
+# def patch_item_db(id, quantity):
+#     conn, cursor = connect_db()
+
+#     status_message = "Error Message"
+#     status_code = 400
+
+#     try:
+#         cursor.execute("update item set quantity=?", [quantity])
+#         conn.commit()
+        
