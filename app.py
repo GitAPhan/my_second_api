@@ -78,4 +78,23 @@ def delete_item():
 
     return Response(delete_status, mimetype="application/json", status=delete_code)
 
+# Given an id, return the employee name, hired_at and hourly_wage with that particular id
+@app.get('/employee')
+def get_employee():
+    employee = None
+    # status message for key name error
+    key_status_message = "KeyError: 'id'"
+
+    try:
+        # user input
+        id = request.args['id']
+    except KeyError:
+        return Response(key_status_message, mimetype="application/json", status=500)
+
+    employee = db.get_employee_db(id)
+
+    employee_json = json.dumps(employee, default=str)
+
+    return Response(employee_json, mimetype="application/json", status=200)
+
 app.run(debug=True) 

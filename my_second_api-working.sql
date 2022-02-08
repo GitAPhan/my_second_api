@@ -57,7 +57,7 @@ CREATE TABLE `item` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `item_un` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'item1','description1',0,'2022-02-05 16:09:42'),(2,'item 2','description 2',5,'2022-02-04 16:09:42'),(3,'item 3','description 3',1,'2022-02-04 16:09:42'),(4,'item 4','description 4',1,'2022-02-02 16:09:42'),(5,'item 5','description 5',1,'2022-02-03 16:09:42'),(6,'item 6','description 6',1,'2022-02-01 16:09:42'),(7,'item 7','description 7',1,'2022-02-05 13:09:42'),(8,'item 8','description 8',1,'2022-02-01 10:09:42'),(9,'item 9','description 9',1,'2022-02-02 09:09:42'),(10,'item 0','description 0',1,'2022-02-04 16:39:42'),(11,'newItem','same old description',1,'2022-02-05 17:14:17'),(13,'newItem2','same old description',1,'2022-02-05 17:21:28'),(14,'newItem23','same old description',1,'2022-02-05 17:24:01'),(16,'newItem233','same old description',1,'2022-02-05 17:27:06'),(17,'','same old description',1,'2022-02-05 17:27:42'),(21,'item_postman','description',2,'2022-02-07 17:26:23'),(27,'item_postman2','postnman_description',56,'2022-02-07 18:03:49'),(28,'item_postman3','postnman_description',1,'2022-02-07 18:11:15'),(31,'item_postman4','postnman_description',1,'2022-02-07 18:12:05'),(32,'item_postman5','postnman_description',1,'2022-02-07 18:15:47');
+INSERT INTO `item` VALUES (2,'item 2','description 2',5,'2022-02-04 16:09:42'),(3,'item 3','description 3',1,'2022-02-04 16:09:42'),(5,'item 5','description 5',1,'2022-02-03 16:09:42'),(6,'item 6','description 6',1,'2022-02-01 16:09:42'),(7,'item 7','description 7',1,'2022-02-05 13:09:42'),(8,'item 8','description 8',1,'2022-02-01 10:09:42'),(9,'item 9','description 9',1,'2022-02-02 09:09:42'),(10,'item 0','description 0',1,'2022-02-04 16:39:42'),(11,'newItem','same old description',1,'2022-02-05 17:14:17'),(13,'newItem2','same old description',1,'2022-02-05 17:21:28'),(14,'newItem23','same old description',1,'2022-02-05 17:24:01'),(16,'newItem233','same old description',1,'2022-02-05 17:27:06'),(17,'','same old description',1,'2022-02-05 17:27:42'),(21,'item_postman','description',2,'2022-02-07 17:26:23'),(27,'item_postman2','postnman_description',56,'2022-02-07 18:03:49'),(28,'item_postman3','postnman_description',1,'2022-02-07 18:11:15'),(31,'item_postman4','postnman_description',1,'2022-02-07 18:12:05'),(32,'item_postman5','postnman_description',1,'2022-02-07 18:15:47');
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-07 20:26:01
+-- Dump completed on 2022-02-07 22:52:53

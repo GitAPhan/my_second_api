@@ -153,3 +153,29 @@ def delete_item_db(id):
     
     disconnect_db(conn, cursor)
 
+# Given an id, return the employee name, hired_at and hourly_wage with that particular id
+def get_employee_db(id):
+    conn, cursor = connect_db()
+
+    employee = "Error message: from database"
+    status_code = 400
+    
+    try:
+        # select statement to grab entry where the id matches
+        cursor.execute("select name, hired_at, hourly_wage from employee where id=?",[id])
+        employee = cursor.fetchone()
+
+        employee = {
+            "name": employee[0],
+            "hired_at": employee[1],
+            "hourly_wage": employee[2]
+        }
+    except db.Warning: 
+        employee = 'general database warning'
+    except TypeError:
+        employee = 'Input Error: invalid value entered'
+
+    disconnect_db(conn, cursor)
+
+    return employee
+    
