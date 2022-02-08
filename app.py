@@ -48,7 +48,7 @@ def patch_item():
 
     try:
         # user input
-        item_id = request.json['id']
+        id = request.json['id']
         key_status_message = "KeyError: 'quantity'"
         quantity = int(request.json['quantity'])
     except KeyError:
@@ -57,9 +57,25 @@ def patch_item():
         return Response('Input Error: "value for quantity has to be a positive whole number"', mimetype='application/json', status=400)    
 
     # request from database
-    patch_status, patch_code = db.patch_item_db(item_id, quantity)
+    patch_status, patch_code = db.patch_item_db(id, quantity)
 
     return Response(patch_status, mimetype="application/json", status=patch_code)
 
+# Given an id, delete an existing item in the DB
+@app.delete('/item')
+def delete_item():
+    # status message for key name error
+    key_status_message = "KeyError: 'id'"
+
+    try:
+        # user input
+        id = request.json['id']
+    except KeyError:
+        return Response(key_status_message, mimetype="application/json", status=500)
+
+    #request from database
+    delete_status, delete_code = db.delete_item_db(id)
+
+    return Response(delete_status, mimetype="application/json", status=delete_code)
 
 app.run(debug=True) 

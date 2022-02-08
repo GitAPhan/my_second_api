@@ -101,8 +101,10 @@ def patch_item_db(id, quantity):
     status_code = 400
 
     try:
+        # fetch the count of user input "id" to verify if id exists
         cursor.execute("select count(name) from item where id=?", [id])
         id_status = cursor.fetchone()[0]
+        # conditional to raise custom exception if count is 0
         if id_status == 0:
             raise IdNonExistent
     
@@ -122,3 +124,32 @@ def patch_item_db(id, quantity):
     
     disconnect_db(conn, cursor)
         
+# Given an id, delete an existing item in the DB
+def delete_item_db(id):
+    conn, cursor = connect_db()
+
+    status_message = "Error Message"
+    status_code = 400
+
+    try:
+        # fetch the count of user input "id" to verify if id exists
+        cursor.execute("select count(name) from item where id=?", [id])
+        id_status = cursor.fetchone()[0]
+        # conditional to raise custom exception if count is 0
+        if id_status == 0:
+            raise IdNonExistent
+            
+        cursor.execute("delete from item where id=?", [id])
+        conn.commit()
+
+        #successs message and status
+        status_message = "Success Message"
+        status_code = 200
+    except IdNonExistent:
+        status_message = 'Input Error: id entered does not exist'
+    except db.Warning: 
+        status_message = 'general database warning'
+    return status_message,status_code
+    
+    disconnect_db(conn, cursor)
+
