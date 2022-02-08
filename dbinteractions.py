@@ -177,5 +177,32 @@ def get_employee_db(id):
 
     disconnect_db(conn, cursor)
 
-    return employee
+    return 
+
+# Given an id and hourly_wage update an existing employee to have a new hourly_wage
+def post_employee_db(name, hourly_wage):
+    conn, cursor = connect_db()
+
+    # error message and status
+    status_message = "Error Message"
+    status_code = 400
+
+    try:
+        cursor.execute("insert into employee (name, hourly_wage) values (?,?)", [name, hourly_wage])
+        conn.commit()
+
+        #successs message and status
+        status_message = "Success Message"
+        status_code = 200
+    except db.OperationalError:
+        status_message = 'Input Error: incorrect value entered'
+    except db.DataError:
+        status_message = 'Input Error: incorrect value entered'
+    except db.IntegrityError:
+        status_message = 'Input Error: value can not be lower than minimum wage'
+    except db.Warning: 
+        status_message = 'general database warning'
+    return status_message,status_code
+    
+    disconnect_db(conn, cursor)
     

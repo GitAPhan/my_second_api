@@ -97,4 +97,22 @@ def get_employee():
 
     return Response(employee_json, mimetype="application/json", status=200)
 
+# Given an id and hourly_wage update an existing employee to have a new hourly_wage
+@app.post('/employee')
+def post_employee():
+    # status message for key name error
+    key_status_message = "KeyError: 'name'"
+
+    try:
+        # user input
+        name = request.json['name']
+        key_status_message = "KeyError: 'hourly_wage'"
+        hourly_wage = request.json['hourly_wage']
+    except KeyError:
+        return Response(key_status_message, mimetype="application/json", status=500)
+
+    post_status, post_code = db.post_employee_db(name, hourly_wage)
+
+    return Response(post_status, mimetype="application/json", status=post_code)
+
 app.run(debug=True) 

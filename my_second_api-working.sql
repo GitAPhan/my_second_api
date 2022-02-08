@@ -25,11 +25,11 @@ DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
-  `hired_at` date NOT NULL,
+  `hired_at` date NOT NULL DEFAULT current_timestamp(),
   `hourly_wage` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
-  CONSTRAINT `employee_check` CHECK (`hourly_wage` > 0)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+  CONSTRAINT `employee_check` CHECK (`hourly_wage` >= 15)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'employee_1','2012-01-05',15.00),(2,'employee_2','2010-03-04',16.00),(3,'employee_3','2016-09-09',16.50),(4,'employee_4','2020-10-10',17.00),(5,'employee_5','2021-05-30',14.99);
+INSERT INTO `employee` VALUES (1,'employee_1','2012-01-05',15.00),(2,'employee_2','2010-03-04',16.00),(3,'employee_3','2016-09-09',16.50),(4,'employee_4','2020-10-10',17.00),(5,'employee_5','2021-05-30',15.99),(6,'employee_postman_1','2022-02-08',15.95),(7,'employee_postman_2','2022-02-08',33.95),(8,'employee_postman_3','2022-02-08',15.00);
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -83,4 +83,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-07 22:52:53
+-- Dump completed on 2022-02-08 10:46:33
