@@ -18,7 +18,7 @@ def get_item():
 # Given a name, description and quantity insert a new item into the DB
 @app.post('/item')
 def post_item():
-    # status message for key name error
+    # status message for key name error 
     key_status_message = "KeyError: 'name'"
 
     try:
@@ -91,8 +91,9 @@ def get_employee():
     except KeyError:
         return Response(key_status_message, mimetype="application/json", status=500)
 
+    # request from database
     employee = db.get_employee_db(id)
-
+    # convert Response to json
     employee_json = json.dumps(employee, default=str)
 
     return Response(employee_json, mimetype="application/json", status=200)
@@ -111,6 +112,7 @@ def post_employee():
     except KeyError:
         return Response(key_status_message, mimetype="application/json", status=500)
 
+    # request from database
     post_status, post_code = db.post_employee_db(name, hourly_wage)
 
     return Response(post_status, mimetype="application/json", status=post_code)
@@ -129,6 +131,7 @@ def patch_employee():
     except KeyError:
         return Response(key_status_message, mimetype="application/json", status=500)
 
+    # request from database
     patch_status, patch_code = db.patch_employee_db(id, hourly_wage)
 
     return Response(patch_status, mimetype="application/json", status=patch_code)
@@ -145,6 +148,7 @@ def delete_employee():
     except KeyError:
         return Response(key_status_message, mimetype="application/json", status=500)
 
+    # request from database
     patch_status, patch_code = db.delete_employee_db(id)
 
     return Response(patch_status, mimetype="application/json", status=patch_code)

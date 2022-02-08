@@ -20,24 +20,23 @@ def connect_db():
         cursor = conn.cursor()
     except db.OperationalError:
         print("something went wrong with the DB, please try again in 5 minutes")
-    except Exception as e:
+    except Exception:
         print(e)
-        print("Something went wrong!")
+        print("General DB connection error")
     return conn, cursor  
 
 # disconnect from database function
 def disconnect_db(conn, cursor):
     try:
         cursor.close()
-    except Exception as e:
-        print(e)
-        print("cursor close error: what happened?")
+    except Exception:
+        print("cursor close error: General DB cursor close error")
 
     try:
         conn.close()
-    except Exception as e:
+    except Exception:
         print(e)
-        print("connection close error")
+        print("conn close error: General DB connection close error")
 
 # return all item names, description, quantity, created_at
 def get_item_db():
@@ -48,13 +47,13 @@ def get_item_db():
     try:
         cursor.execute("select name, description, quantity, created_at from item")
         items = cursor.fetchall()
-    except Exception as e:
-        print('##########',e,'##########')
+    except Exception:
+        return "General Database Error"
     
     disconnect_db(conn, cursor)
     
     if items == None:
-        print('something went wrong: items == None')
+        return "database error: unable to run query"
     else:
         # assign key name to returned values
         items_formatted = []
@@ -97,6 +96,7 @@ def post_item_db(name, description, quantity):
 def patch_item_db(id, quantity):
     conn, cursor = connect_db()
 
+    # error message and status
     status_message = "Error Message"
     status_code = 400
 
@@ -128,6 +128,7 @@ def patch_item_db(id, quantity):
 def delete_item_db(id):
     conn, cursor = connect_db()
 
+    # error message and status
     status_message = "Error Message"
     status_code = 400
 
@@ -156,7 +157,8 @@ def delete_item_db(id):
 # Given an id, return the employee name, hired_at and hourly_wage with that particular id
 def get_employee_db(id):
     conn, cursor = connect_db()
-
+    
+    # error message and status
     employee = "Error message: from database"
     status_code = 400
     
@@ -165,6 +167,7 @@ def get_employee_db(id):
         cursor.execute("select name, hired_at, hourly_wage from employee where id=?",[id])
         employee = cursor.fetchone()
 
+        # format output to have labels
         employee = {
             "name": employee[0],
             "hired_at": employee[1],
@@ -177,7 +180,7 @@ def get_employee_db(id):
 
     disconnect_db(conn, cursor)
 
-    return 
+    return employee, status_code
 
 # Given an id and hourly_wage update an existing employee to have a new hourly_wage
 def post_employee_db(name, hourly_wage):
