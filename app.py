@@ -32,7 +32,7 @@ def get_item():
         # if user input does meet any of the above conditions, then error message is returned
         else:
             return Response(
-                "Input Error: key 'ordered_list' only accepts True of False values"
+                "Input Error: key 'ordered_list' only accepts True of False values", mimetype="plain/text", status=400
             )
     except KeyError:
         ordered_list = False
@@ -44,7 +44,7 @@ def get_item():
         return Response(items_json, mimetype="application/json", status=200)
     except:
         return Response('general error:',
-                        mimetype="application/json",
+                        mimetype="plain/text",
                         status=400)
 
 
@@ -124,7 +124,7 @@ def patch_item():
     except ValueError:
         return Response(
             'Input Error: "value for quantity has to be a positive whole number"',
-            mimetype='application/json',
+            mimetype='plain/text',
             status=400)
 
     # request from database
@@ -132,7 +132,7 @@ def patch_item():
                                                 description)
 
     return Response(patch_status,
-                    mimetype="application/json",
+                    mimetype="plain/text",
                     status=patch_code)
 
 
@@ -154,7 +154,7 @@ def delete_item():
     delete_status, delete_code = db.delete_item_db(id)
 
     return Response(delete_status,
-                    mimetype="application/json",
+                    mimetype="plain/text",
                     status=delete_code)
 
 
@@ -170,7 +170,7 @@ def get_employee():
         id = request.args['id']
     except KeyError:
         return Response(key_status_message,
-                        mimetype="application/json",
+                        mimetype="plain/text",
                         status=400)
 
     # request from database
@@ -194,13 +194,13 @@ def post_employee():
         hourly_wage = request.json['hourly_wage']
     except KeyError:
         return Response(key_status_message,
-                        mimetype="application/json",
+                        mimetype="plain/text",
                         status=400)
 
     # request from database
     post_status, post_code = db.post_employee_db(name, hourly_wage)
 
-    return Response(post_status, mimetype="application/json", status=post_code)
+    return Response(post_status, mimetype="plain/text", status=post_code)
 
 
 # Given an id and hourly_wage update an existing employee to have a new
@@ -216,14 +216,14 @@ def patch_employee():
         hourly_wage = request.json['hourly_wage']
     except KeyError:
         return Response(key_status_message,
-                        mimetype="application/json",
+                        mimetype="plain/text",
                         status=400)
 
     # request from database
     patch_status, patch_code = db.patch_employee_db(id, hourly_wage)
 
     return Response(patch_status,
-                    mimetype="application/json",
+                    mimetype="plain/text",
                     status=patch_code)
 
 
@@ -238,14 +238,14 @@ def delete_employee():
         id = request.json['id']
     except KeyError:
         return Response(key_status_message,
-                        mimetype="application/json",
+                        mimetype="plain/text",
                         status=400)
 
     # request from database
     patch_status, patch_code = db.delete_employee_db(id)
 
     return Response(patch_status,
-                    mimetype="application/json",
+                    mimetype="plain/text",
                     status=patch_code)
 
 

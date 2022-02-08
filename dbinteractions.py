@@ -28,7 +28,6 @@ def connect_db():
         print(
             "something went wrong with the DB, please try again in 5 minutes")
     except Exception:
-        print(e)
         print("General DB connection error")
     return conn, cursor
 
@@ -43,7 +42,6 @@ def disconnect_db(conn, cursor):
     try:
         conn.close()
     except Exception:
-        print(e)
         print("conn close error: General DB connection close error")
 
 
