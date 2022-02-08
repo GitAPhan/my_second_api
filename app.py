@@ -115,4 +115,39 @@ def post_employee():
 
     return Response(post_status, mimetype="application/json", status=post_code)
 
+# Given an id and hourly_wage update an existing employee to have a new 
+@app.patch('/employee')
+def patch_employee():
+    # status message for key name error
+    key_status_message = "KeyError: 'id'"
+
+    try:
+        #user input
+        id = request.json['id']
+        key_status_message = "KeyError: 'hourly_wage'"
+        hourly_wage = request.json['hourly_wage']
+    except KeyError:
+        return Response(key_status_message, mimetype="application/json", status=500)
+
+    patch_status, patch_code = db.patch_employee_db(id, hourly_wage)
+
+    return Response(patch_status, mimetype="application/json", status=patch_code)
+
+# Given an id, delete an existing employee in the DB
+@app.delete('/employee')
+def delete_employee():
+    # status message for key name error
+    key_status_message = "KeyError: 'id'"
+
+    try:
+        #user input
+        id = request.json['id']
+    except KeyError:
+        return Response(key_status_message, mimetype="application/json", status=500)
+
+    patch_status, patch_code = db.delete_employee_db(id)
+
+    return Response(patch_status, mimetype="application/json", status=patch_code)
+
+
 app.run(debug=True) 

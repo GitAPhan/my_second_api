@@ -205,4 +205,69 @@ def post_employee_db(name, hourly_wage):
     return status_message,status_code
     
     disconnect_db(conn, cursor)
+
+# Given an id and hourly_wage update an existing employee to have a new hourly_wage
+def patch_employee_db(id, hourly_wage):
+    # error message and status
+    status_message = "Error Message"
+    status_code = 400
+
+    conn, cursor = connect_db()
+
+    try:
+        # fetch the count of user input "id" to verify if id exists
+        cursor.execute("select count(name) from employee where id=?", [id])
+        id_status = cursor.fetchone()[0]
+        # conditional to raise custom exception if count is 0
+        if id_status == 0:
+            raise IdNonExistent
+        
+        cursor.execute("update employee set hourly_wage=? where id=?", [hourly_wage, id])
+        conn.commit()
+
+        #successs message and status
+        status_message = "Success Message"
+        status_code = 200
+    except IdNonExistent:
+        status_message = 'Input Error: id entered does not exist'
+    except db.OperationalError:
+        status_message = 'Input Error: OE - incorrect value entered'
+    except db.DataError:
+        status_message = 'Input Error: DE - incorrect value entered'
+    except db.IntegrityError:
+        status_message = 'Input Error: value can not be lower than minimum wage'
+    except db.Warning: 
+        status_message = 'general database warning'
+    return status_message,status_code
     
+    disconnect_db(conn, cursor)
+
+# Given an id, delete an existing employee in the DB
+def delete_employee_db(id):
+    # error message and status
+    status_message = "Error Message"
+    status_code = 400
+
+    conn, cursor = connect_db()
+
+    try:
+        # fetch the count of user input "id" to verify if id exists
+        cursor.execute("select count(name) from employee where id=?", [id])
+        id_status = cursor.fetchone()[0]
+        # conditional to raise custom exception if count is 0
+        if id_status == 0:
+            raise IdNonExistent
+        
+        cursor.execute("delete from employee where id=?", [id])
+        conn.commit()
+
+        #successs message and status
+        status_message = "Success Message"
+        status_code = 200
+    except IdNonExistent:
+        status_message = 'Input Error: id entered does not exist'
+    except db.Warning: 
+        status_message = 'general database warning'
+    return status_message,status_code
+    
+    disconnect_db(conn, cursor)    
