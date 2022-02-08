@@ -1,10 +1,14 @@
 from ast import Return
+from this import d
 import mariadb as db
 import dbcreds as c
 
 # Exceptions:
 # id of that item is non existent
 class IdNonExistent(Exception):
+    pass
+# input value string too long
+class InputStringTooLong(Exception):
     pass
 
 # connect to database function
@@ -84,6 +88,17 @@ def post_item_db(name, description, quantity):
     status_message = "Error Message"
     status_code = 400
 
+    # conditional to catch if string entered is too long
+    try:
+        if len(name) > 100:
+            status_message = "Input Error:'name' value too long. Please limit to 100 characters"
+            raise InputStringTooLong
+        elif len(description) > 255:
+            status_message = "Input Error:'description' value too long. Please limit to 255 characters"
+            raise InputStringTooLong
+    except InputStringTooLong:
+        return status_message, status_code
+
     try:
         cursor.execute("insert into item (name, description, quantity) values (?,?,?)", [name, description, quantity])
         conn.commit()
@@ -102,12 +117,27 @@ def post_item_db(name, description, quantity):
     disconnect_db(conn, cursor)
 
 # Given an id and quantity, update an existing item in the DB to have a new quantity
-def patch_item_db(id, quantity):
+def patch_item_db(id, quantity, name, description):
     conn, cursor = connect_db()
 
     # error message and status
     status_message = "Error Message"
     status_code = 400
+
+    # conditional to catch if string entered is too long
+    try:
+        if name == False:
+            pass
+        elif len(name) > 100:
+            status_message = "Input Error:'name' value too long. Please limit to 100 characters"
+            raise InputStringTooLong
+        if description == False:
+            pass
+        elif len(description) > 255:
+            status_message = "Input Error:'description' value too long. Please limit to 255 characters"
+            raise InputStringTooLong
+    except InputStringTooLong:
+        return status_message, status_code
 
     try:
         # fetch the count of user input "id" to verify if id exists
@@ -116,8 +146,16 @@ def patch_item_db(id, quantity):
         # conditional to raise custom exception if count is 0
         if id_status == 0:
             raise IdNonExistent
-    
-        cursor.execute("update item set quantity=? where id=?", [quantity, id])
+
+        # conditional to determine which query to run
+        if name != False and description != False:
+            cursor.execute("update item set quantity=?, name=?, description=? where id=?", [quantity, name, description, id])
+        elif name != False and description == False:
+            cursor.execute("update item set quantity=?, name=? where id=?", [quantity, name, id])
+        elif name == False and description != False:
+            cursor.execute("update item set quantity=?, description=? where id=?", [quantity, description, id])
+        else:
+            cursor.execute("update item set quantity=? where id=?", [quantity, id])
         conn.commit()
 
         #successs message and status
@@ -198,6 +236,13 @@ def post_employee_db(name, hourly_wage):
     # error message and status
     status_message = "Error Message"
     status_code = 400
+
+    # conditional to catch if string entered is too long
+    try:
+        if len(name) > 100:
+            raise InputStringTooLong
+    except InputStringTooLong:
+        return "Input Error:'name' value too long. Please limit to 100 characters", status_code
 
     try:
         cursor.execute("insert into employee (name, hourly_wage) values (?,?)", [name, hourly_wage])

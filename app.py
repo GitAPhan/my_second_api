@@ -71,6 +71,17 @@ def post_item():
 # Given an id and quantity, update an existing item in the DB to have a new quantity
 @app.patch('/item')
 def patch_item():
+    # option user input, if key is not present or mispelled, Exception KeyError will set value to False
+    try:
+        name = request.json['name']
+    except KeyError:
+        name = False
+    try:
+        description = request.json['description']
+    except KeyError:
+        description = False
+
+
     # status message for key name error
     key_status_message = "KeyError: 'id'"
 
@@ -85,7 +96,7 @@ def patch_item():
         return Response('Input Error: "value for quantity has to be a positive whole number"', mimetype='application/json', status=400)    
 
     # request from database
-    patch_status, patch_code = db.patch_item_db(id, quantity)
+    patch_status, patch_code = db.patch_item_db(id, quantity, name, description)
 
     return Response(patch_status, mimetype="application/json", status=patch_code)
 
