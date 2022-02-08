@@ -2,6 +2,11 @@ from ast import Return
 import mariadb as db
 import dbcreds as c
 
+# Exceptions:
+# id of that item is non existent
+class IdNonExistent(Exception):
+    pass
+
 # connect to database function
 def connect_db():
     conn = None
@@ -88,14 +93,32 @@ def post_item_db(name, description, quantity):
     
     disconnect_db(conn, cursor)
 
-# # Given an id and quantity, update an existing item in the DB to have a new quantity
-# def patch_item_db(id, quantity):
-#     conn, cursor = connect_db()
+# Given an id and quantity, update an existing item in the DB to have a new quantity
+def patch_item_db(id, quantity):
+    conn, cursor = connect_db()
 
-#     status_message = "Error Message"
-#     status_code = 400
+    status_message = "Error Message"
+    status_code = 400
 
-#     try:
-#         cursor.execute("update item set quantity=?", [quantity])
-#         conn.commit()
+    try:
+        cursor.execute("select count(name) from item where id=?", [id])
+        id_status = cursor.fetchone()[0]
+        if id_status == 0:
+            raise IdNonExistent
+    
+        cursor.execute("update item set quantity=? where id=?", [quantity, id])
+        conn.commit()
+
+        #successs message and status
+        status_message = "Success Message"
+        status_code = 200
+    except IdNonExistent:
+        status_message = 'Input Error: id entered does not exist'
+    except db.DataError:
+        status_message = 'Input Error: quantity can not be negative'
+    except db.Warning: 
+        status_message = 'general database warning'
+    return status_message,status_code
+    
+    disconnect_db(conn, cursor)
         
